@@ -1,6 +1,7 @@
 var sinon = require("sinon");
-var proxyquire =  require('proxyquire')
-var issueOpenedPayload = require('./fixtures/issue-opened.json')
+var proxyquire = require("proxyquire");
+var issueOpenedPayload = require("./fixtures/issue-opened.json");
+
 
 describe("ModerateIssue", () => {
   var moderateIssue
@@ -8,18 +9,18 @@ describe("ModerateIssue", () => {
   before(() => {
     createCommentStub = sinon.spy()
     addLabelsStub = sinon.spy()
+
     octoKitStubs = {
       issues: {
         addLabels: addLabelsStub,
         createComment: createCommentStub
       }
-    }
-
+    };
 
     moderateIssue = proxyquire("../ModerateIssue/index", {
-      '@octokit/rest': () => octoKitStubs,
-      './authenticate': () => true,
-      './get-luis-intent': () => 'question'
+      "@octokit/rest": () => octoKitStubs,
+      "./authenticate": () => true,
+      "./get-luis-intent": () => "question"
     });
   });
 
@@ -28,9 +29,10 @@ describe("ModerateIssue", () => {
 
     sinon.assert.calledWith(addLabelsStub, {
       labels: ['enhancement', 'question', 'bug'],
+
       number: issueOpenedPayload.issue.number,
       owner: issueOpenedPayload.repository.owner.login,
       repo: issueOpenedPayload.repository.name
     });
-  })
+  });
 });
